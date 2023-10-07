@@ -2,7 +2,10 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <div>Header</div>
+    <div className="mb-10 pt-1 pb-2 border-b border-dashed">
+      <h1 className="font-extrabold text-3x1 text-purple-400">Location Sharing</h1>
+      <h2 className="text-sm text-gray-200 font-semibold">Real Time Location Sharing, Made Easy</h2>
+    </div>
   )
 }
 
