@@ -1,12 +1,9 @@
 import { useState, createContext, useContext, JSX } from "react";
 import { io, Socket } from "socket.io-client";
+import { SocketContextType } from "../types";
+import { SOCKET_URL } from "../helpers/environment";
 
-type SocketContextType = {
-  socket: Socket | null;
-  connectSocket: () => void;
-};
-
-type SocketProviderProps = {
+type SocketProviderElement = {
   children: JSX.Element;
 };
 
@@ -14,11 +11,11 @@ type SocketProviderProps = {
 export const SocketContext = createContext<SocketContextType | null>(null);
 
 //* Making a provider for the context above
-export const SocketProvider = ({ children }: SocketProviderProps) => {
+export const SocketProvider = ({ children }: SocketProviderElement) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const connectSocket = () => {
     if (!socket) {
-      const newSocket: Socket = io("http://localhost:4000");
+      const newSocket: Socket = io(SOCKET_URL);
       setSocket(newSocket);
       return;
     }
