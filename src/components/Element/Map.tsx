@@ -6,8 +6,17 @@ import {
   Marker,
   Popup,
 } from "react-leaflet";
+import icon from "leaflet/dist/images/marker-icon.png";
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
 import "leaflet/dist/leaflet.css";
 import { GeolocationPosition } from "../../types";
+import L from 'leaflet'
+
+const MarkerIcon = L.icon({
+  iconUrl:icon,
+  shadowUrl: iconShadow
+})
 
 function Map({ location }: { location: GeolocationPosition | null }) {
   if (!location){
@@ -26,6 +35,7 @@ function Map({ location }: { location: GeolocationPosition | null }) {
         className="h-screen"
       >
         <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributor'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <LocationMarker location={location} />
@@ -50,7 +60,7 @@ function LocationMarker({ location }: { location: GeolocationPosition }) {
   }, [location]);
 
   return position === null ? null : (
-    <Marker position={position}>
+    <Marker position={position} icon={MarkerIcon}>
       <Popup>User is here!</Popup>
     </Marker>
   );

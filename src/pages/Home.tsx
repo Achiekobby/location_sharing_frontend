@@ -1,24 +1,18 @@
 import { useState, useEffect } from "react";
 import Map from "../components/Element/Map";
+import { GeolocationPosition, location_status } from "../types";
 
-type GeolocationPosition = {
-  lat: number;
-  lng: number;
-};
-
-type location_status = "accessed" | "denied" | "unknown" | "error";
 
 export default function Home() {
-  const [locationStatus, setLocationStatus] =
-    useState<location_status>("unknown");
-  const [position, setPosition] = useState<GeolocationPosition | null>(null);
+  const [locationStatus, setLocationStatus] = useState<location_status>("unknown");
+  const [position, setPosition]             = useState<GeolocationPosition | null>(null);
 
   useEffect(() => {
-    let watch_id: number | null = null;
+    let coordinate_id: number | null = null;
 
     //* Checking for geolocation support in browser
     if ("geolocation" in navigator) {
-      watch_id = navigator.geolocation.watchPosition(
+      coordinate_id = navigator.geolocation.watchPosition(
         (position) => {
           setPosition({
             lat: position.coords.latitude,
@@ -44,8 +38,8 @@ export default function Home() {
         }
       );
       return () => {
-        if (watch_id) {
-          navigator.geolocation.clearWatch(watch_id);
+        if (coordinate_id) {
+          navigator.geolocation.clearWatch(coordinate_id);
         }
       };
     }
