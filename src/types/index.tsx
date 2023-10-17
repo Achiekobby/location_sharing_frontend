@@ -8,6 +8,10 @@ export type GeolocationPosition = {
 
 export type location_status = "accessed" | "denied" | "unknown" | "error";
 
+export type room_status = "unknown" | "joined" | "not-exist";
+
+export type socket_status = "connecting" | "connected" |"disconnected" | "error";
+
 export type SocketContextType = {
   socket: Socket | null;
   connectSocket: () => void;
