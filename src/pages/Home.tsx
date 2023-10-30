@@ -153,11 +153,11 @@ export default function Home() {
   return (
     <>
       <section className="pb-3">
-        <article className="bg-slate-600 rounded-md p-3 flex flex-wrap gap-3 justify-between items-center w-full">
+        <article className="bg-white drop-shadow rounded-md p-3 flex flex-wrap gap-3 justify-between items-center w-full">
           <Status locationStatus={locationStatus} socketStatus={socketStatus} />
 
           {position && (
-            <div className="flex gap-2 flex-wrap gap-2 justify-end text-gray-200">
+            <div className="flex gap-2 flex-wrap gap-2 justify-end text-blue-900">
               <p className="font-bold text-sm">
                 Lat: <span className="text-lg font-bold">{position.lat}</span>
               </p>
@@ -171,7 +171,7 @@ export default function Home() {
 
       <section className="flex flex-col lg:flex-row gap-4 w-full h-auto">
         <article
-          className={`flex flex-col justify-between gap-4 w-full bg-slate-500 px-4 py-6 rounded-xl lg:min-w[20rem] ${
+          className={`flex flex-col justify-between gap-4 w-full bg-white drop-shadow px-4 py-6 rounded-xl lg:min-w[20rem] ${
             position ? "lg:max-w-sm" : "w-full"
           }`}
         >
@@ -181,7 +181,7 @@ export default function Home() {
                 <button
                   className={`${
                     locationStatus === "accessed"
-                      ? "bg-purple-600"
+                      ? "bg-blue-600"
                       : "bg-gray-600 cursor-not-allowed"
                   } text-md text-white font-bold py-2 px-4 rounded-md`}
                   onClick={() => {
@@ -202,11 +202,11 @@ export default function Home() {
                     type="text"
                     value={roomLink}
                     onChange={(e) => setRoomLink(e.target.value)}
-                    placeholder="Enter a link to join a sharing room"
-                    className="bg-gray-300 rounded-md px-4 py-2 outline-none ring-0 text-md font-medium"
+                    placeholder="Enter Link Invite"
+                    className="bg-gray-100 rounded-md px-4 py-2 outline-none ring-0 text-md font-medium"
                   />
                   <button
-                    className="bg-yellow-400 text-md text-gray-700 py-2 px-4 rounded-md"
+                    className="bg-gray-800 text-md font-bold text-white py-2 px-4 rounded-md"
                     onClick={() => {
                       if (roomLink) {
                         window.open(roomLink, "_self");
@@ -220,8 +220,65 @@ export default function Home() {
                 </span>
               </div>
             )}
+            {
+              socketStatus==="connected"&& roomInfo &&(
+                <>
+                <div className='flex gap-2 items-center justify-between bg-gray-300 rounded-md p-3'>
+                    <p className='text-md font-bold break-all peer'>{`${window.location.href}location/${roomInfo?.roomId}`}</p>
+                    <span className='cursor-pointer p-2 rounded-full  hover:bg-gray-200 flex items-center active:animate-ping' onClick={() => {
+                      const url = `${window.location.href}location/${roomInfo?.roomId}`
+                      navigator.clipboard.writeText(url).then(() =>{
+                        toast.info('Copied to clipboard!', {
+                          autoClose: 1000,
+                        })
+                      }).catch(() => {
+                        toast.error('Failed to copy to clipboard', {
+                          autoClose: 2000,
+                        })
+                      })
+                    }}>
+                      <LuCopy size=  {16}/>
+                    </span>
+                  </div>
+                  <div className='flex p-2 bg-yellow-400 rounded-md'>
+                    <span className='flex gap-1 items-center'>
+                      <p className='text-lg font-semibold text-blue-600'>{roomInfo && roomInfo.totalConnectedUsers.length - 1}</p>
+                      <p className='text-md font-semibold'>connected users!</p>
+                    </span>
+                  </div>
+                  
+                </>
+              )
+            }
+            {
+              socketStatus === 'connecting' && (
+                <article className='mt-5'>
+                  <StatusPanel
+                    title = "Connecting to server" 
+                    subtitle = "Please wait..."
+                    status = "loading"
+                  />
+                </article>
+              )
+            }
           </div>
+          {
+            socketStatus === 'connected' &&  roomInfo && (
+            <div className='w-full flex justify-center'>
+              <div>
+                <button className='bg-red-600 text-xl text-white font-bold py-2 px-6 rounded-full' onClick={stopSharingLocation}>Stop Sharing</button>
+              </div>
+            </div>
+            )
+          }
         </article>
+        {
+          position && (
+            <article className='bg-gray-200 rounded-md overflow-hidden w-full'>
+              <Map location={position}/>
+            </article>
+          )
+        }
       </section>
     </>
   );
